@@ -1,0 +1,37 @@
+/*Hide Categories from woocommerce Shop Pages\*
+
+If you want to hide some categioes from shop page and want to show some specfic user this product then follow this method and past into child theme functions.php files. If you don't want to create child theme then intsall any code snippet plugina and paste this code there. Be sure to copy this code and enter it to your functions.php to hide WooCommerce categories from the shop page: Remove this PHP tag before pasting onto function.php files. 
+
+<?php
+/**
+* Show products only of the woocommerce selected category.
+*/
+function get_subcategory_terms( $terms, $taxonomies, $args ) {
+$new_terms = array();
+$hide_category = array( 126 ); // Ids of the category you don't want to display on the shop page
+// if a product category and on the shop page
+if ( in_array( 'product_cat', $taxonomies ) && !is_admin() && is_shop() )
+foreach ( $terms as $key => $term ) {
+if ( ! in_array( $term->term_id, $hide_category ) ) {
+$new_terms[] = $term;
+}
+}
+$terms = $new_terms;
+}
+return $terms;
+}
+add_filter( 'get_terms', 'get_subcategory_terms', 10, 3 );
+
+
+/*Hide Categories from woocommerce Single Product Pages\*
+
+If you want to remove the product from single page product then follow these code.
+Open your Theme function.php files and paste this code below of the whole code and add comments before pasting the code to remmeber code nature.
+
+remove_action( 'woocommerce_single_product_summary',
+'woocommerce_template_single_meta', 40 );
+
+After saving the file, then open customize panel from wordpress dashboard and paste this css there. 
+
+.product_meta .posted_in {display: none;}
+
